@@ -1,16 +1,61 @@
 pragma circom 2.0.0;
 
-/*This circuit template checks that c is the multiplication of a and b.*/  
 
-template Multiplier2 () {  
+template Swayamnode () 
+{  
 
-   // Declaration of signals.  
-   signal input a;  
-   signal input b;  
-   signal output c;  
+    //signal inputs
+    signal input a;  
+    signal input b; 
 
-   // Constraints.  
-   c <== a * b;  
+    //signals from gates
+    signal x;  
+    signal y; 
+
+    //final signal output
+    signal output Q; 
+    
+
+    //component gate used to create custom circuit
+     component andGate = AND();
+     component notGate = NOT();
+     component orGate = OR();
+
+    //circuit logic
+    andGate.A <== a;
+    andGate.B <== b;
+    x <== andGate.out;
+  
+    notGate.A <== b;
+    y <== notGate.out;
+
+    orGate.A <==x;
+    orGate.B <==y;
+    Q <== orGate.out; 
+    
 }
 
-component main = Multiplier2();
+template AND() {
+  signal input A;
+  signal input B;
+  signal output out;
+
+  out <== A * B;
+}
+
+template NOT() {
+  signal input A;
+  signal output out;
+
+  out <== 1 + A - 2 * A;
+}
+
+template OR() {
+  signal input A;
+  signal input B;
+  signal output out;
+
+  out <== A + B - A * B;
+}
+
+component main = Swayamnode ();
